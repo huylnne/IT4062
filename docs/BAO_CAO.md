@@ -291,7 +291,7 @@ Các script trong `tests/` chạy Tracker và Peer thật, rồi so SHA-256 củ
 | `e2e_catalog.sh` | Chia sẻ, gỡ, xem danh sách, tìm kiếm; kiểm tra đầu vào; 2000 file (danh sách nhiều frame); file biến mất khi peer thoát; SOURCE_GONE; CANCEL→ABORT; BUSY | 11/11 |
 | `e2e_transfer.sh` | Tải file 1 B, 16 KB, 16 KB + 1 B, 20 MB; không ghi đè; 2 người tải cùng lúc; tiêm lỗi; BUSY; hủy tải; gỡ file giữa chừng; nguồn và người tải bị tắt đột ngột; bộ nhớ Tracker | 33/33 |
 | `e2e_transfer.sh` (`SLOW=1`) | Thêm: ACK trễ quá 10 giây nên nguồn tự gửi lại; nguồn im lặng 30 giây nên Tracker hủy phiên | 37/37 |
-| `netem.sh` | Tải file, tiêm lỗi, hủy tải, gỡ file khi mạng trễ và mất gói | [Chưa chạy — cần sudo; điền kết quả] |
+| `netem.sh` | Tải file, tiêm lỗi, hủy tải, gỡ file khi mạng trễ và mất gói | 7/7 đạt (trễ 50 ms ± 10 ms, mất 5%, 20 Mbit/s) |
 | `make asan` + `make test` | Chạy lại toàn bộ với công cụ dò lỗi bộ nhớ (AddressSanitizer, UBSan): phát hiện đọc/ghi ra ngoài vùng nhớ đã cấp phát, dùng bộ nhớ sau khi giải phóng, quên giải phóng bộ nhớ (rò rỉ) | Không phát hiện lỗi nào |
 
 Một số kết quả cụ thể (trên localhost, WSL2):
@@ -324,7 +324,7 @@ Tracker và Peer chỉ nói chuyện với nhau qua giao thức đã thống nh�
 | Tuần 1 | Giao thức và khung dự án | Xong: protocol.md, Makefile; hàm đọc/ghi đủ byte; JOIN/QUIT chạy được; fake_peer, fake_tracker |
 | Tuần 2 | Danh sách file và nhiều client | Xong: SHARE, UNSHARE, LIST (nhiều frame), SEARCH; poll() và hàng đợi gửi; kiểm tra đầu vào |
 | Tuần 3 | Truyền file | Xong: GET và chuyển tiếp theo chunk; cửa sổ W, ACK; file .part, SHA-256; CANCEL, ABORT; BUSY |
-| Tuần 4 | Tình huống lỗi, gửi lại chunk, kiểm thử mạng xấu | Xong: SOURCE_GONE, mất kết nối, người tải chậm; CRC32, NACK, REQ_RANGE; tiêm lỗi; script test. Script tc netem đã viết, [chưa chạy] |
+| Tuần 4 | Tình huống lỗi, gửi lại chunk, kiểm thử mạng xấu | Xong: SOURCE_GONE, mất kết nối, người tải chậm; CRC32, NACK, REQ_RANGE; tiêm lỗi; script test. Script tc netem đã chạy: 7/7 đạt |
 | Tuần 5 | Hoàn thiện | README, báo cáo; [demo]; phần mở rộng (mục 9) chưa làm |
 
 Thứ tự làm đi từ nền móng lên: giao thức và việc đọc/ghi frame phải đúng trước, vì mọi thứ khác dựa vào đó; có catalog và phục vụ được nhiều client rồi mới truyền file được; hệ thống chạy được rồi mới thử các tình huống lỗi.
